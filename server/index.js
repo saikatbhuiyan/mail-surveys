@@ -2,7 +2,9 @@ const express = require("express");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 require("dotenv").config();
+
 const keys = require("./config/keys");
+const { connect } = require("./config/database");
 
 const app = express();
 
@@ -27,4 +29,12 @@ app.get("/", (req, res) => {
   res.send({ server: "localhost" });
 });
 
-app.listen(PORT);
+const setupAndStartServer = function () {
+  app.listen(PORT, async function () {
+    console.log(`Server started at PORT ${PORT}`);
+    await connect();
+    console.log("Mongo db connected");
+  });
+};
+
+setupAndStartServer();
