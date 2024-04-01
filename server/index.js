@@ -1,12 +1,24 @@
 const express = require("express");
+const cookieSession = require("cookie-session");
 require("dotenv").config();
 
 require("./models/User");
 require("./services/passport");
 
 const { connect } = require("./config/database");
+const keys = require("./config/keys");
 
 const app = express();
+
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    keys: [keys.cookieKey]
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/auth/google", (req, res) => {});
 
